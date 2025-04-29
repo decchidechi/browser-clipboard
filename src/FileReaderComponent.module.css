@@ -1,0 +1,17 @@
+/* FileReaderComponent.module.css */
+.container {
+  /* コンポーネント全体のスタイル */
+}
+
+.title {
+  text-align: left; /* タイトルの左寄せ */
+}
+
+.fileInput {
+  margin-left: 1em; /* ファイル入力要素の左マージン */
+}
+
+.listContainer {
+  margin-top: 1em; /* CopyToClipboardList コンポーネントの上のマージン */
+  font-size: 12px;
+}
