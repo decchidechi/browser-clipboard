@@ -1,13 +1,40 @@
+/**
+ * CopyToClipboardList
+ *
+ */
+
 import React, { useState, useCallback } from "react";
 import styles from "./CopyToClipboardList.module.css"; // CSS Modules をインポート
 
+/**
+ * @interface CopyToClipboardListProps
+ * @property {string[]} items - コピーする文字列の配列。
+ */
 interface CopyToClipboardListProps {
   items: string[];
 }
 
+/**
+ * 配列の内容を表形式で表示し、各行にコピーボタンを提供する React コンポーネント。
+ *
+ * @param {CopyToClipboardListProps} props - コンポーネントの props。
+ * @returns {JSX.Element} - レンダリングされた React 要素。
+ */
 const CopyToClipboardList: React.FC<CopyToClipboardListProps> = ({ items }) => {
+  /**
+   * コピーが完了した行のインデックスを管理するステート。
+   * null の場合は何もコピーされていない状態。
+   */
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
+  /**
+   * クリップボードにテキストをコピーする非同期関数。
+   * コピー成功時には copiedIndex を更新し、一定時間後にリセットする。
+   *
+   * @param {string} text - コピーするテキスト。
+   * @param {number} index - コピーするテキストの配列におけるインデックス。
+   * @returns {void}
+   */
   const handleCopyToClipboard = useCallback(
     async (text: string, index: number) => {
       try {
