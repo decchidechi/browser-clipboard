@@ -20,6 +20,7 @@ const FileReaderComponent: React.FC = () => {
    * 選択されたファイルのエンコーディングを格納するステート。
    * @type {string}
    */
+  const [selectedEncoding, setSelectedEncoding] = useState<string>("UTF-8");
 
   /**
    * ファイルが選択された際のイベントハンドラー。
@@ -29,6 +30,7 @@ const FileReaderComponent: React.FC = () => {
    */
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
+      const currentInputElement = event.currentTarget; // イベントハンドラ内で参照を保持
       const file = event.target.files?.[0];
 
       if (file) {
@@ -50,13 +52,14 @@ const FileReaderComponent: React.FC = () => {
           setLines([]);
         };
 
-        // ファイルの文字コードが Shift-JIS の可能性も考慮して読み込む
-        const encoding =
-          file.type === "text/plain; charset=Shift_JIS" ? "Shift-JIS" : "UTF-8";
-        reader.readAsText(file, encoding);
+        reader.readAsText(file, selectedEncoding);
+
+        // ファイル処理後にinputの値をリセットする
+        // これにより、同じファイルを再度選択した場合でもonChangeイベントが発火
+        currentInputElement.value = "";
       }
     },
-    [setLines]
+    [setLines, selectedEncoding] // selectedEncoding を依存配列に追加
   );
 
   return (
@@ -69,6 +72,19 @@ const FileReaderComponent: React.FC = () => {
           onChange={handleFileChange}
           className={styles.fileInput}
         />
+        <div className={styles.encodingSelector}>
+          <label htmlFor="encoding-select">
+            ファイルエンコーディング(UTF-8 or SJIS):{" "}
+          </label>
+          <select
+            id="encoding-select"
+            value={selectedEncoding}
+            onChange={(e) => setSelectedEncoding(e.target.value)}
+          >
+            <option value="UTF-8">UTF-8</option>
+            <option value="Shift-JIS">Shift-JIS</option>
+          </select>
+        </div>
         <div className={styles.listContainer}>
           <CopyToClipboardList items={lines} />
         </div>
